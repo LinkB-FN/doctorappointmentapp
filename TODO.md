@@ -1,2 +1,0 @@
-- [x] Add create account button below logout button in lib/main.dart
-- [ ] Add forgot password button below create account button in lib/main.dart
