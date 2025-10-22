@@ -25,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         return windows;
       case TargetPlatform.linux:
@@ -77,4 +74,14 @@ class DefaultFirebaseOptions {
     authDomain: 'doctorappointment-91859.firebaseapp.com',
     storageBucket: 'doctorappointment-91859.firebasestorage.app',
   );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyCoJ4N03XPpPutMn5zivqAsC8bSR7kjWTA',
+    appId: '1:887650920323:ios:410ce550962faee9abf8b6',
+    messagingSenderId: '887650920323',
+    projectId: 'doctorappointment-91859',
+    storageBucket: 'doctorappointment-91859.firebasestorage.app',
+    iosBundleId: 'com.example.doctorappointmentapp',
+  );
+
 }
