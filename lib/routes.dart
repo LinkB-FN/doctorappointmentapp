@@ -1,12 +1,11 @@
-import 'package:doctorappointmentapp/HomePage.dart';
-import 'package:doctorappointmentapp/main.dart' hide LoginPage;
-import 'package:doctorappointmentapp/profile_page.dart';
-import 'package:doctorappointmentapp/PrivacyPage.dart';
-import 'package:doctorappointmentapp/AboutUsPage.dart';
-import 'package:doctorappointmentapp/appointment_page.dart';
-import 'package:doctorappointmentapp/admin_page.dart';
+import 'package:doctorappointmentapp/pagina_inicio.dart';
+import 'package:doctorappointmentapp/pagina_perfil.dart';
+import 'package:doctorappointmentapp/pagina_privacidad.dart';
+import 'package:doctorappointmentapp/pagina_sobre_nosotros.dart';
+import 'package:doctorappointmentapp/pagina_citas.dart';
+import 'package:doctorappointmentapp/pagina_admin.dart';
 import 'package:flutter/material.dart';
-import 'LoginPage.dart';
+import 'pagina_login.dart';
 
 class Routes {
   static const String login = '/login';
@@ -20,19 +19,19 @@ class Routes {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case login:
-        return MaterialPageRoute(builder: (_) => LoginPage());
+        return MaterialPageRoute(builder: (_) => PaginaLogin());
       case home:
-        return MaterialPageRoute(builder: (_) => const HomePage());
+        return MaterialPageRoute(builder: (_) => const PaginaInicio());
       case profile:
-        return MaterialPageRoute(builder: (_) => const ProfilePage());
+        return MaterialPageRoute(builder: (_) => const PaginaPerfil());
       case privacy:
-        return MaterialPageRoute(builder: (_) => const PrivacyPage());
+        return MaterialPageRoute(builder: (_) => const PaginaPrivacidad());
       case aboutus:
-        return MaterialPageRoute(builder: (_) => const AboutUsPage());
+        return MaterialPageRoute(builder: (_) => const PaginaSobreNosotros());
       case appointment:
-        return MaterialPageRoute(builder: (_) => const AppointmentPage());
+        return MaterialPageRoute(builder: (_) => const PaginaCitas());
       case admin:
-        return MaterialPageRoute(builder: (_) => const AdminPage());
+        return MaterialPageRoute(builder: (_) => const PaginaAdmin());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

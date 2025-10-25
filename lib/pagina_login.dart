@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'routes.dart'; // NUEVO
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key}); // Constructors for public widgets should have a named 'key'
+class PaginaLogin extends StatefulWidget {
+  const PaginaLogin({super.key}); // Constructors for public widgets should have a named 'key'
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<PaginaLogin> createState() => _PaginaLoginState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _PaginaLoginState extends State<PaginaLogin> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();

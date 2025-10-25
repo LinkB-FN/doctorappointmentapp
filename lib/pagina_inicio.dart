@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'routes.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class PaginaInicio extends StatefulWidget {
+  const PaginaInicio({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<PaginaInicio> createState() => _PaginaInicioState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _PaginaInicioState extends State<PaginaInicio> {
   int _selectedIndex = 0;
 
   static const List<Widget> _widgetOptions = <Widget>[
@@ -60,7 +60,10 @@ class HomeBody extends StatelessWidget {
     final String userName = user?.displayName ?? user?.email?.split('@')[0] ?? 'Usuario';
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Inicio")),
+      appBar: AppBar(
+        title: const Text("Inicio"),
+        automaticallyImplyLeading: false,
+        ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(

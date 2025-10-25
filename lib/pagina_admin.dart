@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'models/doctor_availability.dart';
 import 'services/firestore_service.dart';
 
-class AdminPage extends StatefulWidget {
-  const AdminPage({super.key});
+class PaginaAdmin extends StatefulWidget {
+  const PaginaAdmin({super.key});
 
   @override
-  State<AdminPage> createState() => _AdminPageState();
+  State<PaginaAdmin> createState() => _PaginaAdminState();
 }
 
-class _AdminPageState extends State<AdminPage> {
+class _PaginaAdminState extends State<PaginaAdmin> {
   final FirestoreService _firestoreService = FirestoreService();
   bool _isLoading = false;
 

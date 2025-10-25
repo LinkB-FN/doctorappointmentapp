@@ -4,14 +4,14 @@ import 'routes.dart';
 import 'models/user.dart';
 import 'services/firestore_service.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class PaginaPerfil extends StatefulWidget {
+  const PaginaPerfil({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<PaginaPerfil> createState() => _PaginaPerfilState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _PaginaPerfilState extends State<PaginaPerfil> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -84,7 +84,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
+    final auth.FirebaseAuth firebaseAuth = auth.FirebaseAuth.instance;
 
     return Scaffold(
       appBar: AppBar(title: const Text("Perfil")),
@@ -135,7 +135,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () async {
-                    await _auth.signOut();
+                    await firebaseAuth.signOut();
                     Navigator.pushReplacementNamed(context, Routes.login);
                   },
                   child: const Text("Cerrar sesión"),
