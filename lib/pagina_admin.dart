@@ -70,22 +70,34 @@ class _PaginaAdminState extends State<PaginaAdmin> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Admin - Agregar Disponibilidad')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            const Text(
-              'Esta página permite agregar disponibilidad de médicos de ejemplo.',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 20),
-            _isLoading
-                ? const CircularProgressIndicator()
-                : ElevatedButton(
-                    onPressed: _addSampleAvailability,
-                    child: const Text('Agregar Disponibilidad de Ejemplo'),
-                  ),
-          ],
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFF1E3A8A), // Softer dark blue
+              Color(0xFF581C87), // Softer dark purple
+            ],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              const Text(
+                'Esta página permite agregar disponibilidad de médicos de ejemplo.',
+                style: TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 20),
+              _isLoading
+                  ? const CircularProgressIndicator()
+                  : ElevatedButton(
+                      onPressed: _addSampleAvailability,
+                      child: const Text('Agregar Disponibilidad de Ejemplo'),
+                    ),
+            ],
+          ),
         ),
       ),
     );

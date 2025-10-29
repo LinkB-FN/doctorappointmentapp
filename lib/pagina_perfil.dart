@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'routes.dart';
@@ -87,60 +89,145 @@ class _PaginaPerfilState extends State<PaginaPerfil> {
     final auth.FirebaseAuth firebaseAuth = auth.FirebaseAuth.instance;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Perfil")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(labelText: 'Nombre'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingresa tu nombre';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  controller: _phoneController,
-                  decoration: const InputDecoration(labelText: 'Teléfono'),
-                  keyboardType: TextInputType.phone,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingresa tu teléfono';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  controller: _medicalHistoryController,
-                  decoration: const InputDecoration(labelText: 'Historial médico'),
-                  maxLines: 3,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingresa tu historial médico';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _saveProfile,
-                  child: const Text('Guardar'),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () async {
-                    await firebaseAuth.signOut();
-                    Navigator.pushReplacementNamed(context, Routes.login);
-                  },
-                  child: const Text("Cerrar sesión"),
-                ),
+      backgroundColor: const Color(0xFF0C1730),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF001F3F),
+              Color(0xFF240046),
+            ],
+          ),
+        ),
+        child: Center(
+          child: Container(
+            width: min(600.0, max(350.0, MediaQuery.of(context).size.width * 0.8)),
+            height: MediaQuery.of(context).size.height * 0.85,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+            decoration: BoxDecoration(
+              color: Colors.black.withOpacity(0.45),
+              border: Border.all(color: Colors.blueAccent.withOpacity(0.3)),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.blueAccent.withOpacity(0.2),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
+                )
               ],
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "PERFIL",
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 12,
+                      letterSpacing: 1.2,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    "Tu Perfil",
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  const SizedBox(height: 20),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          controller: _nameController,
+                          style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                          decoration: const InputDecoration(
+                            labelText: 'Nombre',
+                            labelStyle: TextStyle(color: Color.fromARGB(179, 0, 0, 0)),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white70),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blueAccent),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor ingresa tu nombre';
+                            }
+                            return null;
+                          },
+                        ),
+                        TextFormField(
+                          controller: _phoneController,
+                          style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                          decoration: const InputDecoration(
+                            labelText: 'Teléfono',
+                            labelStyle: TextStyle(color: Colors.white70),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white70),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blueAccent),
+                            ),
+                          ),
+                          keyboardType: TextInputType.phone,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor ingresa tu teléfono';
+                            }
+                            return null;
+                          },
+                        ),
+                        TextFormField(
+                          controller: _medicalHistoryController,
+                          style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                          decoration: const InputDecoration(
+                            labelText: 'Historial médico',
+                            labelStyle: TextStyle(color: Color.fromARGB(179, 0, 0, 0)),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white70),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blueAccent),
+                            ),
+                          ),
+                          maxLines: 3,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor ingresa tu historial médico';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: _saveProfile,
+                          child: const Text('Guardar'),
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () async {
+                            await firebaseAuth.signOut();
+                            Navigator.pushReplacementNamed(context, Routes.login);
+                          },
+                          child: const Text("Cerrar sesión"),
+                        ),
+                        const SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushReplacementNamed(context, Routes.home);
+                          },
+                          child: const Text("Volver a Inicio"),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
