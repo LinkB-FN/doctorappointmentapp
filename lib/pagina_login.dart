@@ -98,7 +98,7 @@ class _PaginaLoginState extends State<PaginaLogin> with SingleTickerProviderStat
                       ),
                       const SizedBox(height: 20),
                       const Text(
-                        "FortHealth",
+                        "FortiMed",
                         style: TextStyle(
                           color: Color.fromARGB(255, 255, 255, 255),
                           fontSize: 25,
@@ -148,6 +148,7 @@ class _PaginaLoginState extends State<PaginaLogin> with SingleTickerProviderStat
                   width: 100,
                   height: 100,
                 ),
+               
               );
             },
           ),

@@ -59,10 +59,7 @@ class PaginaPrivacidad extends StatelessWidget {
                   const SizedBox(height: 20),
                   const Text(
                     "Política de Privacidad\n\n"
-                    "En DoctorAppointmentApp, nos comprometemos a proteger tu privacidad. "
-                    "Recopilamos información personal solo para mejorar nuestros servicios. "
-                    "Tus datos se almacenan de forma segura y no se comparten con terceros sin tu consentimiento. "
-                    "Para más detalles, contacta con nosotros.",
+                    "es mui privado",
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                   const SizedBox(height: 20),

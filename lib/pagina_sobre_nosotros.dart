@@ -58,11 +58,8 @@ class PaginaSobreNosotros extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   const Text(
-                    "Sobre DoctorAppointmentApp\n\n"
-                    "DoctorAppointmentApp es una aplicación diseñada para facilitar la reserva de citas médicas. "
-                    "Conectamos a pacientes con doctores de diversas especialidades de manera rápida y segura. "
-                    "Nuestro objetivo es mejorar la experiencia de atención médica mediante tecnología innovadora. "
-                    "¡Gracias por usar nuestra app!",
+                    "Sobre nuestra App\n\n"
+                    "somos una app lo juro",
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                   const SizedBox(height: 20),

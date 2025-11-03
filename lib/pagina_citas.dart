@@ -216,7 +216,7 @@ class PaginaCitasState extends State<PaginaCitas> {
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.calendar_today, color: Colors.white),
+                        icon: Image.asset('images/Schedule.png', width: 45, height: 45),
                         onPressed: seleccionarFechaYHora,
                       ),
                     ],

@@ -127,14 +127,14 @@ class HomeBody extends StatelessWidget {
                           // Navigate to schedule appointment
                           Navigator.pushNamed(context, Routes.appointment);
                         },
-                        child: const Padding(
-                          padding: EdgeInsets.all(16.0),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.calendar_today, size: 48, color: Colors.white),
-                              SizedBox(height: 8),
-                              Text('Agendar una Cita', style: TextStyle(color: Colors.white)),
+                              Image.asset('images/Schedule.png', width: 58, height: 58),
+                              const SizedBox(height: 8),
+                              const Text('Agendar una Cita', style: TextStyle(color: Colors.white)),
                             ],
                           ),
                         ),
@@ -345,7 +345,7 @@ class SettingsBody extends StatelessWidget {
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: ListTile(
-                      leading: const Icon(Icons.person, color: Colors.white),
+                      leading: Image.asset('images/user.png', width: 24, height: 24),
                       title: const Text('Perfil', style: TextStyle(color: Colors.white)),
                       onTap: () {
                         Navigator.pushNamed(context, Routes.profile);
@@ -360,7 +360,7 @@ class SettingsBody extends StatelessWidget {
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: ListTile(
-                      leading: const Icon(Icons.privacy_tip, color: Colors.white),
+                      leading: Image.asset('images/privacy.png', width: 24, height: 24),
                       title: const Text('Privacidad', style: TextStyle(color: Colors.white)),
                       onTap: () {
                         Navigator.pushNamed(context, Routes.privacy);
@@ -375,7 +375,7 @@ class SettingsBody extends StatelessWidget {
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: ListTile(
-                      leading: const Icon(Icons.info, color: Colors.white),
+                      leading: Image.asset('images/about.png', width: 24, height: 24),
                       title: const Text('Sobre nosotros', style: TextStyle(color: Colors.white)),
                       onTap: () {
                         Navigator.pushNamed(context, Routes.aboutus);
@@ -389,13 +389,7 @@ class SettingsBody extends StatelessWidget {
                       border: Border.all(color: Colors.white24),
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    child: ListTile(
-                      leading: const Icon(Icons.admin_panel_settings, color: Colors.white),
-                      title: const Text('Admin', style: TextStyle(color: Colors.white)),
-                      onTap: () {
-                        Navigator.pushNamed(context, Routes.admin);
-                      },
-                    ),
+                    
                   ),
                   Container(
                     margin: const EdgeInsets.symmetric(vertical: 4),
@@ -405,7 +399,7 @@ class SettingsBody extends StatelessWidget {
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: ListTile(
-                      leading: const Icon(Icons.logout, color: Colors.white),
+                      leading: Image.asset('images/logout.png', width: 24, height: 24),
                       title: const Text('LogOut', style: TextStyle(color: Colors.white)),
                       onTap: () async {
                         await FirebaseAuth.instance.signOut();

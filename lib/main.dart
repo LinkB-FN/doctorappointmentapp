@@ -2,14 +2,61 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'routes.dart'; // Importamos todas las rutas
+import 'routes.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'dart:html' as html; // Solo afecta Web
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+
+  runApp(const AudioController(child: MyApp()));
+}
+
+class AudioController extends StatefulWidget {
+  final Widget child;
+  const AudioController({super.key, required this.child});
+
+  @override
+  State<AudioController> createState() => _AudioControllerState();
+}
+
+class _AudioControllerState extends State<AudioController> {
+  final AudioPlayer audioPlayer = AudioPlayer();
+
+  @override
+  void initState() {
+    super.initState();
+    _initAudio();
+  }
+
+  Future<void> _initAudio() async {
+    try {
+      await audioPlayer.setSource(AssetSource('og.mp3'));
+      await audioPlayer.setReleaseMode(ReleaseMode.loop);
+      await audioPlayer.resume();
+      print('✅ Música de fondo iniciada');
+    } catch (e) {
+      print('⚠️ Error al iniciar música: $e');
+    }
+
+    // Si Chrome bloquea autoplay, reintentar tras un clic
+    html.window.onClick.listen((_) async {
+      if (audioPlayer.state != PlayerState.playing) {
+        try {
+          await audioPlayer.resume();
+          print('🎵 Música iniciada tras clic del usuario');
+        } catch (e) {
+          print('⚠️ Error al reintentar música: $e');
+        }
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }
 
 class MyApp extends StatelessWidget {
@@ -19,19 +66,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'DoctorAppointmentApp',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'BurbankBigCondensed',
-        primaryColor: const Color(0xFF87CEEB), // Light blue for headers
+        primaryColor: const Color(0xFF87CEEB),
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF87CEEB), // Light blue AppBar
+          backgroundColor: Color(0xFF87CEEB),
           foregroundColor: Colors.white,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF87CEEB), // Light blue buttons
+            backgroundColor: const Color(0xFF87CEEB),
             foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           ),
@@ -46,15 +94,13 @@ class MyApp extends StatelessWidget {
           ),
           filled: true,
           fillColor: Colors.white.withOpacity(0.8),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           floatingLabelBehavior: FloatingLabelBehavior.auto,
         ),
       ),
-      initialRoute: Routes.login, // Ruta inicial
-      onGenerateRoute: Routes.generateRoute, // Generador de rutas
+      initialRoute: Routes.login,
+      onGenerateRoute: Routes.generateRoute,
     );
   }
 }
-
-
-
