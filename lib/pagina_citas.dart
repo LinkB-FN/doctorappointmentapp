@@ -123,6 +123,13 @@ class PaginaCitasState extends State<PaginaCitas> {
     });
   }
 
+  // Función para refrescar citas (aunque el StreamBuilder actualiza en tiempo real, el gesto permite interacción manual)
+  Future<void> _refreshCitas() async {
+    // El StreamBuilder ya maneja actualizaciones en tiempo real desde Firebase.
+    // Aquí podemos agregar un delay mínimo para simular el refresh si es necesario.
+    await Future.delayed(const Duration(milliseconds: 500));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -281,45 +288,89 @@ class PaginaCitasState extends State<PaginaCitas> {
                           return const Center(child: Text('No hay citas programadas', style: TextStyle(color: Colors.white)));
                         }
 
-                        return ListView.builder(
-                          itemCount: citas.length,
-                          itemBuilder: (context, index) {
-                            final cita = citas[index];
-                            final data = cita.data() as Map<String, dynamic>;
-                            final fecha = (data['fechaHora'] as Timestamp?)?.toDate();
+                        return RefreshIndicator(
+                          onRefresh: _refreshCitas,
+                          child: ListView.builder(
+                            itemCount: citas.length,
+                            itemBuilder: (context, index) {
+                              final cita = citas[index];
+                              final data = cita.data() as Map<String, dynamic>;
+                              final fecha = (data['fechaHora'] as Timestamp?)?.toDate();
 
-                            return Container(
-                              margin: const EdgeInsets.symmetric(vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Colors.blueGrey.withOpacity(0.3),
-                                border: Border.all(color: Colors.white24),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: ListTile(
-                                title: Text(
-                                  "${data['motivo'] ?? 'Sin motivo'} (${data['nombreUsuario'] ?? 'Desconocido'})",
-                                  style: const TextStyle(color: Colors.white),
+                              return Dismissible(
+                                key: Key(cita.id),
+                                direction: DismissDirection.endToStart,
+                                background: Container(
+                                  margin: const EdgeInsets.symmetric(vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  alignment: Alignment.centerRight,
+                                  padding: const EdgeInsets.only(right: 20),
+                                  child: const Icon(
+                                    Icons.delete,
+                                    color: Colors.white,
+                                  ),
                                 ),
-                                subtitle: Text(
-                                  'Fecha: ${fecha ?? 'Sin fecha'}',
-                                  style: const TextStyle(color: Colors.white70),
-                                ),
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.edit, color: Colors.blue),
-                                      onPressed: () => editarCita(cita.id, data),
+                                confirmDismiss: (direction) async {
+                                  return await showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('Confirmar eliminación'),
+                                        content: const Text('¿Estás seguro de que quieres eliminar esta cita?'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () => Navigator.of(context).pop(false),
+                                            child: const Text('Cancelar'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () => Navigator.of(context).pop(true),
+                                            child: const Text('Eliminar'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                                onDismissed: (direction) {
+                                  eliminarCita(cita.id);
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.blueGrey.withOpacity(0.3),
+                                    border: Border.all(color: Colors.white24),
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: ListTile(
+                                    title: Text(
+                                      "${data['motivo'] ?? 'Sin motivo'} (${data['nombreUsuario'] ?? 'Desconocido'})",
+                                      style: const TextStyle(color: Colors.white),
                                     ),
-                                    IconButton(
-                                      icon: const Icon(Icons.delete, color: Colors.red),
-                                      onPressed: () => eliminarCita(cita.id),
+                                    subtitle: Text(
+                                      'Fecha: ${fecha ?? 'Sin fecha'}',
+                                      style: const TextStyle(color: Colors.white70),
                                     ),
-                                  ],
+                                    trailing: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(Icons.edit, color: Colors.blue),
+                                          onPressed: () => editarCita(cita.id, data),
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.delete, color: Colors.red),
+                                          onPressed: () => eliminarCita(cita.id),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         );
                       },
                     ),
