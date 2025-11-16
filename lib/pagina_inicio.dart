@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'routes.dart';
+import 'services/firestore_service.dart';
+import 'models/user.dart' as app_user;
 
 class PaginaInicio extends StatefulWidget {
   const PaginaInicio({super.key});
@@ -68,13 +70,55 @@ class _PaginaInicioState extends State<PaginaInicio> {
   }
 }
 
-class HomeBody extends StatelessWidget {
+class HomeBody extends StatefulWidget {
   const HomeBody({super.key});
+
+  @override
+  State<HomeBody> createState() => _HomeBodyState();
+}
+
+class _HomeBodyState extends State<HomeBody> {
+  final FirestoreService _firestoreService = FirestoreService();
+  String _userRole = 'Paciente';
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserRole();
+  }
+
+  Future<void> _loadUserRole() async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userData = await _firestoreService.getUser(user.uid);
+      if (userData != null) {
+        setState(() {
+          _userRole = userData.role;
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final User? user = FirebaseAuth.instance.currentUser;
     final String userName = user?.displayName ?? user?.email?.split('@')[0] ?? 'Usuario';
+
+    if (_isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(color: Colors.blueAccent),
+      );
+    }
 
     return Center(
       child: Container(
@@ -112,67 +156,114 @@ class HomeBody extends StatelessWidget {
                 style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
               ),
               const SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      height: 120,
-                      decoration: BoxDecoration(
-                        color: Colors.blueGrey.withOpacity(0.3),
-                        border: Border.all(color: Colors.white24),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: InkWell(
-                        onTap: () {
-                          // Navigate to schedule appointment
-                          Navigator.pushNamed(context, Routes.appointment);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset('images/Schedule.png', width: 58, height: 58),
-                              const SizedBox(height: 8),
-                              const Text('Agendar una Cita', style: TextStyle(color: Colors.white)),
-                            ],
+              // Mostrar diferentes opciones según el rol
+              if (_userRole == 'Paciente') ...[
+                Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: 120,
+                        decoration: BoxDecoration(
+                          color: Colors.blueGrey.withOpacity(0.3),
+                          border: Border.all(color: Colors.white24),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(context, Routes.appointment);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset('images/Schedule.png', width: 58, height: 58),
+                                const SizedBox(height: 8),
+                                const Text('Agregar Cita', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Container(
-                      height: 120,
-                      decoration: BoxDecoration(
-                        color: Colors.blueGrey.withOpacity(0.3),
-                        border: Border.all(color: Colors.white24),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: InkWell(
-                        onTap: () {
-                          // Navigate to medical tips
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Consejos Médicos')),
-                          );
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.all(16.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.lightbulb, size: 48, color: Colors.white),
-                              SizedBox(height: 8),
-                              Text('Consejos', style: TextStyle(color: Colors.white)),
-                            ],
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Container(
+                        height: 120,
+                        decoration: BoxDecoration(
+                          color: Colors.blueGrey.withOpacity(0.3),
+                          border: Border.all(color: Colors.white24),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Consejos Médicos')),
+                            );
+                          },
+                          child: const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.lightbulb, size: 48, color: Colors.white),
+                                SizedBox(height: 8),
+                                Text('Consejos', style: TextStyle(color: Colors.white)),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
+                  ],
+                ),
+              ] else if (_userRole == 'Médico') ...[
+                Container(
+                  height: 120,
+                  decoration: BoxDecoration(
+                    color: Colors.blueAccent.withOpacity(0.3),
+                    border: Border.all(color: Colors.blueAccent),
+                    borderRadius: BorderRadius.circular(6),
                   ),
-                ],
-              ),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pushNamed(context, Routes.dashboard);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.dashboard, size: 48, color: Colors.white),
+                          const SizedBox(width: 16),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Ver Dashboard',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Panel de Médico',
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.8),
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
               const SizedBox(height: 20),
               const Text(
                 'Especialistas',

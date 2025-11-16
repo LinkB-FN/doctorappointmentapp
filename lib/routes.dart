@@ -4,6 +4,7 @@ import 'package:doctorappointmentapp/pagina_privacidad.dart';
 import 'package:doctorappointmentapp/pagina_sobre_nosotros.dart';
 import 'package:doctorappointmentapp/pagina_citas.dart';
 import 'package:doctorappointmentapp/pagina_admin.dart';
+import 'package:doctorappointmentapp/pagina_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'pagina_login.dart';
 
@@ -15,6 +16,7 @@ class Routes {
   static const String aboutus = '/aboutus';
   static const String appointment = '/appointment';
   static const String admin = '/admin';
+  static const String dashboard = '/dashboard';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -32,6 +34,8 @@ class Routes {
         return MaterialPageRoute(builder: (_) => const PaginaCitas());
       case admin:
         return MaterialPageRoute(builder: (_) => const PaginaAdmin());
+      case dashboard:
+        return MaterialPageRoute(builder: (_) => const PaginaDashboard());
       default:
         return MaterialPageRoute(
           builder: (_) => Scaffold(

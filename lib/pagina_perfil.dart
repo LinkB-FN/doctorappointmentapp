@@ -20,6 +20,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> {
   final TextEditingController _medicalHistoryController = TextEditingController();
   final FirestoreService _firestoreService = FirestoreService();
   bool _isLoading = false;
+  String _selectedRole = 'Paciente';
 
   @override
   void initState() {
@@ -44,6 +45,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> {
           _nameController.text = userData.name;
           _phoneController.text = userData.phone;
           _medicalHistoryController.text = userData.medicalHistory;
+          _selectedRole = userData.role;
         });
       }
     }
@@ -64,6 +66,7 @@ class _PaginaPerfilState extends State<PaginaPerfil> {
             email: user.email ?? '',
             phone: _phoneController.text.trim(),
             medicalHistory: _medicalHistoryController.text.trim(),
+            role: _selectedRole,
           );
 
           await _firestoreService.createUser(userData);
@@ -201,6 +204,39 @@ class _PaginaPerfilState extends State<PaginaPerfil> {
                               return 'Por favor ingresa tu historial médico';
                             }
                             return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        DropdownButtonFormField<String>(
+                          value: _selectedRole,
+                          dropdownColor: const Color(0xFF0C1730),
+                          style: const TextStyle(color: Colors.black),
+                          decoration: const InputDecoration(
+                            labelText: 'Rol',
+                            labelStyle: TextStyle(color: Color.fromARGB(179, 0, 0, 0)),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white70),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blueAccent),
+                            ),
+                          ),
+                          items: const [
+                            DropdownMenuItem(
+                              value: 'Paciente',
+                              child: Text('Paciente'),
+                            ),
+                            DropdownMenuItem(
+                              value: 'Médico',
+                              child: Text('Médico'),
+                            ),
+                          ],
+                          onChanged: (String? newValue) {
+                            if (newValue != null) {
+                              setState(() {
+                                _selectedRole = newValue;
+                              });
+                            }
                           },
                         ),
                         const SizedBox(height: 20),

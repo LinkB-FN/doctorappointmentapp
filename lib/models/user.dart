@@ -4,6 +4,7 @@ class User {
   final String email;
   final String phone;
   final String medicalHistory;
+  final String role; // "Paciente" o "Médico"
 
   User({
     required this.id,
@@ -11,6 +12,7 @@ class User {
     required this.email,
     required this.phone,
     required this.medicalHistory,
+    this.role = 'Paciente', // Valor por defecto
   });
 
   Map<String, dynamic> toMap() {
@@ -20,6 +22,7 @@ class User {
       'email': email,
       'phone': phone,
       'medicalHistory': medicalHistory,
+      'role': role,
     };
   }
 
@@ -30,6 +33,7 @@ class User {
       email: map['email'] ?? '',
       phone: map['phone'] ?? '',
       medicalHistory: map['medicalHistory'] ?? '',
+      role: map['role'] ?? 'Paciente',
     );
   }
 }

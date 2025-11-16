@@ -103,4 +103,71 @@ class FirestoreService {
   Future<void> deleteDoctorAvailability(String availabilityId) async {
     await _doctorAvailability.doc(availabilityId).delete();
   }
+
+  // Dashboard Statistics Methods
+  
+  // Obtener total de citas
+  Future<int> getTotalAppointments() async {
+    QuerySnapshot query = await _appointments.get();
+    return query.docs.length;
+  }
+
+  // Obtener citas próximas (futuras)
+  Future<int> getUpcomingAppointments() async {
+    DateTime now = DateTime.now();
+    QuerySnapshot query = await _appointments.get();
+    
+    int count = 0;
+    for (var doc in query.docs) {
+      Appointment appointment = Appointment.fromMap(doc.data() as Map<String, dynamic>);
+      if (appointment.date.isAfter(now)) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  // Obtener total de pacientes únicos
+  Future<int> getTotalPatients() async {
+    QuerySnapshot query = await _users.where('role', isEqualTo: 'Paciente').get();
+    return query.docs.length;
+  }
+
+  // Obtener citas para un médico específico
+  Future<List<Appointment>> getAppointmentsForDoctor(String doctorId) async {
+    QuerySnapshot query = await _appointments.where('doctorId', isEqualTo: doctorId).get();
+    return query.docs.map((doc) => Appointment.fromMap(doc.data() as Map<String, dynamic>)).toList();
+  }
+
+  // Stream para actualizaciones en tiempo real de citas
+  Stream<List<Appointment>> getAppointmentsStream() {
+    return _appointments.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => Appointment.fromMap(doc.data() as Map<String, dynamic>)).toList();
+    });
+  }
+
+  // Stream para estadísticas del dashboard
+  Stream<Map<String, int>> getDashboardStatsStream() {
+    return _appointments.snapshots().asyncMap((appointmentsSnapshot) async {
+      DateTime now = DateTime.now();
+      int totalAppointments = appointmentsSnapshot.docs.length;
+      
+      int upcomingAppointments = 0;
+      for (var doc in appointmentsSnapshot.docs) {
+        Appointment appointment = Appointment.fromMap(doc.data() as Map<String, dynamic>);
+        if (appointment.date.isAfter(now)) {
+          upcomingAppointments++;
+        }
+      }
+
+      QuerySnapshot usersSnapshot = await _users.where('role', isEqualTo: 'Paciente').get();
+      int totalPatients = usersSnapshot.docs.length;
+
+      return {
+        'totalAppointments': totalAppointments,
+        'upcomingAppointments': upcomingAppointments,
+        'totalPatients': totalPatients,
+      };
+    });
+  }
 }

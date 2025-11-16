@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'routes.dart';
 import 'dart:async';
+import 'services/firestore_service.dart';
+import 'models/user.dart' as app_user;
 
 class PaginaLogin extends StatefulWidget {
   const PaginaLogin({super.key});
@@ -15,6 +17,8 @@ class _PaginaLoginState extends State<PaginaLogin> with SingleTickerProviderStat
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirestoreService _firestoreService = FirestoreService();
+  String _selectedRole = 'Paciente';
 
   late AnimationController _animationController;
   late Animation<double> _positionAnimation;
@@ -111,6 +115,8 @@ class _PaginaLoginState extends State<PaginaLogin> with SingleTickerProviderStat
                       _buildSettingRow("Correo electrónico", emailController),
                       const SizedBox(height: 12),
                       _buildSettingRow("Contraseña", passwordController, obscure: true),
+                      const SizedBox(height: 12),
+                      _buildRoleDropdown(),
 
                       const SizedBox(height: 24),
                       const Text(
@@ -237,14 +243,80 @@ class _PaginaLoginState extends State<PaginaLogin> with SingleTickerProviderStat
     }
   }
 
+  Widget _buildRoleDropdown() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          "ROL",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Container(
+            height: 32,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(
+              color: Colors.blueGrey.withOpacity(0.3),
+              border: Border.all(color: Colors.white24),
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _selectedRole,
+                dropdownColor: const Color(0xFF0C1730),
+                style: const TextStyle(color: Colors.white),
+                icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
+                items: const [
+                  DropdownMenuItem(
+                    value: 'Paciente',
+                    child: Text('Paciente'),
+                  ),
+                  DropdownMenuItem(
+                    value: 'Médico',
+                    child: Text('Médico'),
+                  ),
+                ],
+                onChanged: (String? newValue) {
+                  if (newValue != null) {
+                    setState(() {
+                      _selectedRole = newValue;
+                    });
+                  }
+                },
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Future<void> _register() async {
     try {
-      await _auth.createUserWithEmailAndPassword(
+      final userCredential = await _auth.createUserWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
+      
+      // Crear usuario en Firestore con el rol seleccionado
+      final newUser = app_user.User(
+        id: userCredential.user!.uid,
+        name: emailController.text.split('@')[0],
+        email: emailController.text.trim(),
+        phone: '',
+        medicalHistory: '',
+        role: _selectedRole,
+      );
+      
+      await _firestoreService.createUser(newUser);
+      
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Cuenta creada con éxito")),
+        SnackBar(content: Text("Cuenta creada con éxito como $_selectedRole")),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
